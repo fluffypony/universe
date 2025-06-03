@@ -113,6 +113,8 @@ mod gpu_miner_adapter;
 mod gpu_status_file;
 mod hardware;
 mod internal_wallet;
+#[cfg(feature = "mcp-server")]
+mod mcp;
 mod mining_status_manager;
 mod mm_proxy_adapter;
 mod mm_proxy_manager;
@@ -277,6 +279,8 @@ struct UniverseAppState {
     websocket_manager_status_rx: Arc<watch::Receiver<WebsocketManagerStatusMessage>>,
     websocket_manager: Arc<RwLock<WebsocketManager>>,
     websocket_event_manager: Arc<RwLock<WebsocketEventsManager>>,
+    #[cfg(feature = "mcp-server")]
+    mcp_server_handle: Arc<RwLock<Option<tokio::task::JoinHandle<Result<(), anyhow::Error>>>>>,
 }
 
 #[derive(Clone, serde::Serialize, serde::Deserialize)]
@@ -475,6 +479,8 @@ fn main() {
         websocket_manager_status_rx: Arc::new(websocket_manager_status_rx.clone()),
         websocket_manager,
         websocket_event_manager: Arc::new(RwLock::new(websocket_events_manager)),
+        #[cfg(feature = "mcp-server")]
+        mcp_server_handle: Arc::new(RwLock::new(None)),
     };
     let app_state_clone = app_state.clone();
     #[allow(
@@ -715,6 +721,20 @@ fn main() {
             commands::get_tari_wallet_balance,
             commands::get_bridge_envs,
             commands::get_universal_miner_initialized_exchange_id,
+            #[cfg(feature = "mcp-server")]
+            commands::get_mcp_config,
+            #[cfg(feature = "mcp-server")]
+            commands::set_mcp_enabled,
+            #[cfg(feature = "mcp-server")]
+            commands::set_mcp_allow_wallet_send,
+            #[cfg(feature = "mcp-server")]
+            commands::set_mcp_port,
+            #[cfg(feature = "mcp-server")]
+            commands::set_mcp_audit_logging,
+            #[cfg(feature = "mcp-server")]
+            commands::set_mcp_allowed_host_addresses,
+            #[cfg(feature = "mcp-server")]
+            commands::restart_mcp_server,
         ])
         .build(tauri::generate_context!())
         .inspect_err(|e| {

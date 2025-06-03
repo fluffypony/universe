@@ -134,4 +134,12 @@ declare module '@tauri-apps/api/core' {
     function invoke(param: 'get_tari_wallet_balance'): Promise<WalletBalance>;
     function invoke(param: 'get_bridge_envs'): Promise<BridgeEnvs>;
     function invoke(param: 'get_universal_miner_initialized_exchange_id'): Promise<string | undefiend>;
+    
+    // MCP Server Commands
+    function invoke(param: 'set_mcp_enabled', payload: { enabled: boolean }): Promise<void>;
+    function invoke(param: 'set_mcp_allow_wallet_send', payload: { allowWalletSend: boolean }): Promise<void>;
+    function invoke(param: 'set_mcp_port', payload: { port: number }): Promise<void>;
+    function invoke(param: 'set_mcp_audit_logging', payload: { auditLogging: boolean }): Promise<void>;
+    function invoke(param: 'set_mcp_allowed_host_addresses', payload: { allowedHosts: string[] }): Promise<void>;
+    function invoke(param: 'restart_mcp_server'): Promise<void>;
 }

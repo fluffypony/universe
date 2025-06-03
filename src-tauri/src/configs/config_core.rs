@@ -68,6 +68,16 @@ pub struct ConfigCoreContent {
     remote_base_node_address: String,
     node_type: NodeType,
     universal_miner_initialized_exchange_id: Option<String>,
+    #[cfg(feature = "mcp-server")]
+    mcp_enabled: bool,
+    #[cfg(feature = "mcp-server")]
+    mcp_allow_wallet_send: bool,
+    #[cfg(feature = "mcp-server")]
+    mcp_allowed_host_addresses: Vec<String>,
+    #[cfg(feature = "mcp-server")]
+    mcp_port: u16,
+    #[cfg(feature = "mcp-server")]
+    mcp_audit_logging: bool,
 }
 
 fn default_monero_nodes() -> Vec<String> {
@@ -122,6 +132,19 @@ impl Default for ConfigCoreContent {
             remote_base_node_address,
             node_type: NodeType::Local,
             universal_miner_initialized_exchange_id: None,
+            #[cfg(feature = "mcp-server")]
+            mcp_enabled: false,
+            #[cfg(feature = "mcp-server")]
+            mcp_allow_wallet_send: false,
+            #[cfg(feature = "mcp-server")]
+            mcp_allowed_host_addresses: vec![
+                "127.0.0.1".to_string(),
+                "::1".to_string(),
+            ],
+            #[cfg(feature = "mcp-server")]
+            mcp_port: 0,
+            #[cfg(feature = "mcp-server")]
+            mcp_audit_logging: true,
         }
     }
 }

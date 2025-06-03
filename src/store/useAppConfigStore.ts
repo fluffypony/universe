@@ -25,6 +25,12 @@ const configCoreInitialState: ConfigCore = {
     p2pool_stats_server_port: undefined,
     default_chain: window.location.host.startsWith('localhost:') ? ChainId.SEPOLIA : ChainId.MAINNET,
     universal_miner_initialized_exchange_id: undefined,
+    // MCP Server Configuration
+    mcp_enabled: false,
+    mcp_allow_wallet_send: false,
+    mcp_allowed_host_addresses: ['127.0.0.1', '::1'],
+    mcp_port: 0,
+    mcp_audit_logging: true,
 };
 
 const configWalletInitialState: ConfigWallet = {

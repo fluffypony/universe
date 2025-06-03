@@ -26,6 +26,12 @@ export {
     setShowExperimentalSettings,
     setUseTor,
     setVisualMode,
+    // MCP Configuration Actions
+    setMcpEnabled,
+    setMcpAllowWalletSend,
+    setMcpPort,
+    setMcpAuditLogging,
+    setMcpAllowedHostAddresses,
 } from './appConfigStoreActions.ts';
 
 export {

@@ -1,0 +1,40 @@
+{
+  "mcp_server": {
+    "enabled": true,
+    "allow_wallet_send": false,
+    "allowed_host_addresses": [
+      "127.0.0.1",
+      "::1"
+    ],
+    "port": 0,
+    "audit_logging": true,
+    "description": "MCP server configuration for AI agent integration"
+  },
+  "security_notes": [
+    "Set enabled=true to activate the MCP server",
+    "allow_wallet_send=false prevents AI agents from sending transactions by default",
+    "Only localhost addresses are allowed for security",
+    "port=0 uses a random available port",
+    "audit_logging=true tracks all MCP operations",
+    "Enable wallet send operations only when needed and with trusted AI agents"
+  ],
+  "example_usage": {
+    "safe_operations": [
+      "Reading wallet balance",
+      "Checking mining status", 
+      "Getting application state",
+      "Starting/stopping mining",
+      "Validating addresses"
+    ],
+    "privileged_operations": [
+      "Sending Tari transactions (requires allow_wallet_send=true)"
+    ]
+  },
+  "ai_agent_benefits": [
+    "Automated mining optimization",
+    "Intelligent transaction management", 
+    "Real-time balance monitoring",
+    "Performance analytics and reporting",
+    "Proactive mining recommendations"
+  ]
+}

@@ -375,3 +375,54 @@ export const handleAppInMemoryConfigChanged = (payload: AppInMemoryConfigChanged
     };
     useConfigBEInMemoryStore.setState(newConfig);
 };
+
+// MCP Configuration Actions
+export const setMcpEnabled = async (enabled: boolean) => {
+    try {
+        await invoke('set_mcp_enabled', { enabled });
+        useConfigCoreStore.setState({ mcp_enabled: enabled });
+    } catch (error) {
+        console.error('Failed to set MCP enabled:', error);
+        setError('Failed to update MCP server settings');
+    }
+};
+
+export const setMcpAllowWalletSend = async (allowWalletSend: boolean) => {
+    try {
+        await invoke('set_mcp_allow_wallet_send', { allowWalletSend });
+        useConfigCoreStore.setState({ mcp_allow_wallet_send: allowWalletSend });
+    } catch (error) {
+        console.error('Failed to set MCP allow wallet send:', error);
+        setError('Failed to update MCP wallet send permission');
+    }
+};
+
+export const setMcpPort = async (port: number) => {
+    try {
+        await invoke('set_mcp_port', { port });
+        useConfigCoreStore.setState({ mcp_port: port });
+    } catch (error) {
+        console.error('Failed to set MCP port:', error);
+        setError('Failed to update MCP server port');
+    }
+};
+
+export const setMcpAuditLogging = async (auditLogging: boolean) => {
+    try {
+        await invoke('set_mcp_audit_logging', { auditLogging });
+        useConfigCoreStore.setState({ mcp_audit_logging: auditLogging });
+    } catch (error) {
+        console.error('Failed to set MCP audit logging:', error);
+        setError('Failed to update MCP audit logging setting');
+    }
+};
+
+export const setMcpAllowedHostAddresses = async (allowedHosts: string[]) => {
+    try {
+        await invoke('set_mcp_allowed_host_addresses', { allowedHosts });
+        useConfigCoreStore.setState({ mcp_allowed_host_addresses: allowedHosts });
+    } catch (error) {
+        console.error('Failed to set MCP allowed host addresses:', error);
+        setError('Failed to update MCP allowed host addresses');
+    }
+};

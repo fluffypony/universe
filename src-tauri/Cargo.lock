@@ -8189,6 +8189,7 @@ dependencies = [
  "tower-http",
  "tungstenite",
  "urlencoding",
+ "uuid",
  "whoami",
  "winreg 0.52.0",
  "xz2",

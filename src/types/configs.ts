@@ -25,6 +25,12 @@ export interface ConfigCore {
     node_type?: NodeType;
     default_chain: number;
     universal_miner_initialized_exchange_id?: string;
+    // MCP Server Configuration
+    mcp_enabled?: boolean;
+    mcp_allow_wallet_send?: boolean;
+    mcp_allowed_host_addresses?: string[];
+    mcp_port?: number;
+    mcp_audit_logging?: boolean;
 }
 export interface ConfigWallet {
     created_at: string;

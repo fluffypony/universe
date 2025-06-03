@@ -17,6 +17,7 @@ import {
     ExperimentalSettings,
     GeneralSettings,
     MiningSettings,
+    MCPSettings,
     WalletSettings,
     ReleaseNotes,
 } from './sections';
@@ -37,6 +38,7 @@ const SettingsModal = memo(function SettingsModal() {
         p2p: <PoolMiningSettings />,
         wallet: <WalletSettings />,
         airdrop: <AirdropSettings />,
+        mcp: <MCPSettings />,
         experimental: <ExperimentalSettings />,
         releaseNotes: <ReleaseNotes />,
     };

@@ -25,7 +25,10 @@ use crate::app_in_memory_config::{
 };
 use crate::auto_launcher::AutoLauncher;
 use crate::binaries::{Binaries, BinaryResolver};
+use std::sync::Arc;
 use crate::configs::config_core::{AirdropTokens, ConfigCore, ConfigCoreContent};
+#[cfg(feature = "mcp-server")]
+use crate::mcp::security::MCPConfig;
 use crate::configs::config_mining::{ConfigMining, ConfigMiningContent, GpuThreads, MiningMode};
 use crate::configs::config_ui::{ConfigUI, ConfigUIContent, DisplayMode};
 use crate::configs::config_wallet::{ConfigWallet, ConfigWalletContent};
@@ -2170,6 +2173,85 @@ pub async fn get_tari_wallet_balance(
             pending_outgoing_balance: MicroMinotari(0),
         }),
     }
+}
+
+/*
+ ********** MCP SERVER SECTION **********
+*/
+
+#[cfg(feature = "mcp-server")]
+#[tauri::command]
+pub async fn get_mcp_config() -> Result<MCPConfig, InvokeError> {
+    MCPConfig::load().await.map_err(InvokeError::from_anyhow)
+}
+
+#[cfg(feature = "mcp-server")]
+#[tauri::command]
+pub async fn set_mcp_enabled(enabled: bool) -> Result<(), InvokeError> {
+    ConfigCore::update_field(ConfigCoreContent::set_mcp_enabled, enabled)
+        .await
+        .map_err(InvokeError::from_anyhow)?;
+    Ok(())
+}
+
+#[cfg(feature = "mcp-server")]
+#[tauri::command]
+pub async fn set_mcp_allow_wallet_send(allow_wallet_send: bool) -> Result<(), InvokeError> {
+    ConfigCore::update_field(ConfigCoreContent::set_mcp_allow_wallet_send, allow_wallet_send)
+        .await
+        .map_err(InvokeError::from_anyhow)?;
+    Ok(())
+}
+
+#[cfg(feature = "mcp-server")]
+#[tauri::command]
+pub async fn set_mcp_port(port: u16) -> Result<(), InvokeError> {
+    ConfigCore::update_field(ConfigCoreContent::set_mcp_port, port)
+        .await
+        .map_err(InvokeError::from_anyhow)?;
+    Ok(())
+}
+
+#[cfg(feature = "mcp-server")]
+#[tauri::command]
+pub async fn set_mcp_audit_logging(audit_logging: bool) -> Result<(), InvokeError> {
+    ConfigCore::update_field(ConfigCoreContent::set_mcp_audit_logging, audit_logging)
+        .await
+        .map_err(InvokeError::from_anyhow)?;
+    Ok(())
+}
+
+#[cfg(feature = "mcp-server")]
+#[tauri::command]
+pub async fn set_mcp_allowed_host_addresses(allowed_hosts: Vec<String>) -> Result<(), InvokeError> {
+    ConfigCore::update_field(ConfigCoreContent::set_mcp_allowed_host_addresses, allowed_hosts)
+        .await
+        .map_err(InvokeError::from_anyhow)?;
+    Ok(())
+}
+
+#[cfg(feature = "mcp-server")]
+#[tauri::command]
+pub async fn restart_mcp_server(
+    app_handle: tauri::AppHandle,
+    state: tauri::State<'_, UniverseAppState>,
+) -> Result<(), String> {
+    // Stop existing MCP server if running
+    if let Some(mcp_server_handle) = state.mcp_server_handle.write().await.take() {
+        mcp_server_handle.abort();
+    }
+
+    // Start new MCP server with updated config
+    let config = MCPConfig::load().await.map_err(|e| e.to_string())?;
+    
+    if config.enabled {
+        use crate::mcp::start_mcp_server;
+        let app_state = Arc::new(state.inner().clone());
+        let server_task = tokio::spawn(start_mcp_server(app_state, app_handle.clone()));
+        *state.mcp_server_handle.write().await = Some(server_task);
+    }
+
+    Ok(())
 }
 
 #[tauri::command]
